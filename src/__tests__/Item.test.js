@@ -1,15 +1,25 @@
-import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
-import Item from "../components/Item";
+import React from "react";
+import { useState } from "react";
 
-test("the <li> does not have a className when initialized", () => {
-  const { container } = render(<Item name="Milk" category="Dairy" />);
-  expect(container.querySelector("li")).toBeInTheDocument();
-  expect(container.querySelector("li").className).not.toContain("in-cart");
-});
+function Item({ name, category }) {
+  const [isInCart, setIsInCart] = useState(false);
 
-test("the <li> has a className of 'in-cart' when the Add to Cart button is clicked", () => {
-  const { container } = render(<Item name="Milk" category="Dairy" />);
-  fireEvent.click(screen.getByText(/ Cart/));
-  expect(container.querySelector(".in-cart")).toBeInTheDocument();
-});
+  function handleAddToCartClick(){
+    setIsInCart((isInCart) => !isInCart);
+  }
+  return (
+    <li className={isInCart ? "in-cart" : ""}>
+      <span>{name}</span>
+      <span className="category">{category}</span>
+      <button
+      className={isInCart ? "remove" : "add"}
+      onClick={handleAddToCartClick}
+      >
+        {isInCart ? "Remove From" : "Add to"} Cart
+      </button>
+    </li>
+  );
+}
+
+export default Item;
+

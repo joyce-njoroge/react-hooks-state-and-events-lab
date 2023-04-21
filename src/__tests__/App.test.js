@@ -1,30 +1,29 @@
-import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
-import App from "../components/App";
+import React from "react";
+import ShoppingList from "./ShoppingList";
+import ItemData from "../data/items";
+import { useState } from "react";
 
-test("displays in 'light' mode when initialized", () => {
-  const { container } = render(<App />);
-  expect(container.querySelector(".light")).toBeInTheDocument();
-});
+function App () {
+  const [items, setItems] = useState(ItemData);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+function handleDarkModeClick() {
+  setIsDarkMode((isDarkMode) => !isDarkMode);
+}
 
-test("changes to 'dark' mode when the button is clicked", () => {
-  const { container } = render(<App />);
-  expect(container.querySelector(".light")).toBeInTheDocument();
+//replace 'false' with a state variable that can be toggled between true and false
+// this will be used for the Dark Mode Toggle feature
+const appClass = isDarkMode ? "App dark" : "App light";
 
-  fireEvent.click(screen.getByText(/ Mode/));
+return (
+  <div className={appClass}>
+    <header>
+      <h2>Shopster</h2>
+      <button onClick={handleDarkModeClick}>{isDarkMode ? "Dark" : "Light"} Mode
+      </button>
+    </header>
+    <ShoppingList items={ItemData} />
+  </div>
+);
+}
 
-  expect(container.querySelector(".dark")).toBeInTheDocument();
-});
-
-test("changes back to 'light' mode when the button is clicked twice", () => {
-  const { container } = render(<App />);
-  expect(container.querySelector(".light")).toBeInTheDocument();
-
-  fireEvent.click(screen.getByText(/ Mode/));
-
-  expect(container.querySelector(".dark")).toBeInTheDocument();
-
-  fireEvent.click(screen.getByText(/ Mode/));
-
-  expect(container.querySelector(".light")).toBeInTheDocument();
-});
+export default App
